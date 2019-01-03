@@ -17,8 +17,8 @@ export class MessageBuilding {
       tableHdrLine += "--------------";
       userHdrLength = "User".length;
     }
-    // console.log(data);
-    // console.log(parseData);
+    console.log(data);
+    console.log(parseData);
     tableHdr += "          Last rage quit       | Count \n";
     tableHdrLine += "-------------------------------------";
     msg += tableHdr + tableHdrLine + "\n";
