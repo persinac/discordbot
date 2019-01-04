@@ -7,9 +7,6 @@ class GreetCommand {
     getHelpMessage(commandPrefix) {
         return `Use ${commandPrefix}greet to get a greeting.`;
     }
-    async run(parsedUserCommand) {
-        await parsedUserCommand.originalMessage.reply("hello, world!");
-    }
     async runCommand(parsedUserCommand) {
         await parsedUserCommand.originalMessage.reply("hello, world!");
     }

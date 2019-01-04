@@ -1,68 +1,51 @@
 var RageQuitter = require('../model/model.js');
 
-exports.list_all_tasks = function(req, res) {
-  RageQuitter.getAllTask(function(err, task) {
-
-    console.log('controller')
+exports.get_all_rage_quitters = function(req, res) {
+  RageQuitter.getAllRageQuitters(function(err, rageQuitter) {
     if (err)
       res.send(err);
-    console.log('res', task);
-    res.send(task);
+    res.send(rageQuitter);
   });
 };
 
 
 
-exports.create_a_task = function(req, res) {
-  var new_rage_quitter = new RageQuitter(req.query);
-  console.log(new_rage_quitter);
-  //handles null error
+exports.createRageQuitter = function(req, res) {
+  var new_rage_quitter = new RageQuitter({player: req.params.player, counter: 1});
   if(!new_rage_quitter || !new_rage_quitter){
     res.status(400).send({ error:true, message: 'Please provide player name' });
   }
   else{
-    RageQuitter.createTask(new_rage_quitter, function(err, task) {
+    RageQuitter.createRageQuitter(new_rage_quitter, function(err, rageQuitter) {
       if (err)
         res.send(err);
-      res.json(task);
+      res.json(rageQuitter);
     });
   }
 };
 
-
-exports.read_a_task = function(req, res) {
-  RageQuitter.getTaskById(req.params.taskId, function(err, task) {
+exports.getRageQuitterByName = function(req, res) {
+  RageQuitter.getRageQuitterByName(req.params.player, function(err, rageQuitter) {
     if (err)
       res.send(err);
-    res.json(task);
-  });
-};
-
-exports.get_player = function(req, res) {
-  console.log(req);
-  RageQuitter.getRageQuitterByName(req.query.player, function(err, task) {
-    if (err)
-      res.send(err);
-    res.json(task);
+    res.json(rageQuitter);
   });
 };
 
 
-exports.update_a_task = function(req, res) {
-  RageQuitter.updateById(req.params.taskId, new RageQuitter(req.body), function(err, task) {
+exports.updateRageQuitterById = function(req, res) {
+  RageQuitter.updateCounterById(req.params.rageQuitterId, function(err, rageQuitter) {
     if (err)
       res.send(err);
-    res.json(task);
+    res.json(rageQuitter);
   });
 };
 
 
-exports.delete_a_task = function(req, res) {
-
-
-  RageQuitter.remove( req.params.taskId, function(err, task) {
+exports.deleteRageQuitter = function(req, res) {
+  RageQuitter.remove( req.params.rageQuitterId, function(err) {
     if (err)
       res.send(err);
-    res.json({ message: 'Task successfully deleted' });
+    res.json({ message: 'Rager has been successfully deleted' });
   });
 };

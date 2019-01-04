@@ -8,10 +8,6 @@ export class GreetCommand implements Command {
     return `Use ${commandPrefix}greet to get a greeting.`;
   }
 
-  async run(parsedUserCommand: CommandContext): Promise<void> {
-    await parsedUserCommand.originalMessage.reply("hello, world!");
-  }
-
   async runCommand(parsedUserCommand: CommandContext): Promise<void> {
     await parsedUserCommand.originalMessage.reply("hello, world!");
   }

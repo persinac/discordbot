@@ -5,13 +5,12 @@ class HelpCommand {
         this.commandNames = ["help", "halp", "hlep"];
         this.commands = commands;
     }
-    async run(commandContext) {
+    async runCommand(commandContext) {
         const allowedCommands = this.commands.filter(command => command.hasPermissionToRun(commandContext));
         if (commandContext.args.length == 0) {
             // No command specified, give the user a list of all commands they can use.
             const commandNames = allowedCommands.map(command => command.commandNames[0]);
-            await commandContext.originalMessage.reply(`here is a list of commands you can run: ${commandNames.join(", ")}. Try !help ${commandNames[0]} to learn more about one of them.`
-                + `\nVersion: 0.4 https://github.com/hopskipnfall/discord-typescript-bot`);
+            await commandContext.originalMessage.reply(`here is a list of commands you can run: ${commandNames.join(", ")}. Try !help ${commandNames[0]} to learn more about one of them.`);
             return;
         }
         const matchedCommand = this.commands.find(command => command.commandNames.includes(commandContext.args[0]));
@@ -22,9 +21,6 @@ class HelpCommand {
         else if (allowedCommands.includes(matchedCommand)) {
             await commandContext.originalMessage.reply(this.buildHelpMessageForCommand(matchedCommand, commandContext));
         }
-    }
-    async runCommand(parsedUserCommand) {
-        await parsedUserCommand.originalMessage.reply("hello, world!");
     }
     buildHelpMessageForCommand(command, context) {
         return `${command.getHelpMessage(context.commandPrefix)}\nCommand aliases: ${command.commandNames.join(", ")}`;

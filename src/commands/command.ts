@@ -13,9 +13,6 @@ export interface Command {
   getHelpMessage(commandPrefix: string): string;
 
   /** Execute the command. */
-  run(parsedUserCommand: CommandContext): Promise<void>;
-
-  /** Execute the command. */
   runCommand(parsedUserCommand: CommandContext, user: String): Promise<void>;
 
   /** Returns whether or not the requesting user can use the command in the current context. */

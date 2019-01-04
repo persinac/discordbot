@@ -11,15 +11,14 @@ export class HelpCommand implements Command {
     this.commands = commands;
   }
 
-  async run(commandContext: CommandContext): Promise<void> {
+  async runCommand(commandContext: CommandContext): Promise<void> {
     const allowedCommands = this.commands.filter(command => command.hasPermissionToRun(commandContext));
 
     if (commandContext.args.length == 0) {
       // No command specified, give the user a list of all commands they can use.
       const commandNames = allowedCommands.map(command => command.commandNames[0]);
       await commandContext.originalMessage.reply(
-        `here is a list of commands you can run: ${commandNames.join(", ")}. Try !help ${commandNames[0]} to learn more about one of them.`
-        + `\nVersion: 0.4 https://github.com/hopskipnfall/discord-typescript-bot`);
+        `here is a list of commands you can run: ${commandNames.join(", ")}. Try !help ${commandNames[0]} to learn more about one of them.`);
       return;
     }
 
@@ -30,10 +29,6 @@ export class HelpCommand implements Command {
     } else if (allowedCommands.includes(matchedCommand)) {
       await commandContext.originalMessage.reply(this.buildHelpMessageForCommand(matchedCommand, commandContext));
     }
-  }
-
-  async runCommand(parsedUserCommand: CommandContext): Promise<void> {
-    await parsedUserCommand.originalMessage.reply("hello, world!");
   }
 
   private buildHelpMessageForCommand(command: Command, context: CommandContext): string {
