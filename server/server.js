@@ -7,7 +7,7 @@ port = process.env.PORT || 48330;
 const mysql = require('mysql');
 // connection configurations
 const mc = mysql.createConnection({
-  host: '0.0.0.0',
+  host: 'localhost',
   user: 'root',
   password: '',
   database: 'discord'
