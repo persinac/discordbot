@@ -60,7 +60,19 @@ const leaveChannel = () => {
 
 const playAudio = (connection: VoiceConnection, audioUrl: string) => {
   console.log(audioUrl);
-  const dispatcher = connection.playFile(audioUrl);
+  const dispatcher = connection.playFile(audioUrl, { volume: 1 }, function (error, streamIntent) {
+    streamIntent.on("error", function (error) {
+      console.log("error " + error);
+    });
+
+    streamIntent.on("time", function (time) {
+      console.log("time " + time);
+    });
+
+    streamIntent.on("end", function () {
+      console.log("end");
+    });
+  });
   dispatcher.on("error", error => {
     console.log("ERROR");
     console.log(error);
