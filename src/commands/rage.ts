@@ -38,7 +38,7 @@ export class RageCommand implements Command {
   async getRageQuitByName(parsedUserCommand: CommandContext, user: string): Promise<void> {
     let r1 = "";
     console.log(user);
-    await req.post("http://localhost:3000/rager/" + user)
+    await req.post("http://localhost:48330/rager/" + user)
       .then(function (htmlString: string) {
         r1 = htmlString;
       })
@@ -52,7 +52,7 @@ export class RageCommand implements Command {
   async getAllRagers(parsedUserCommand: CommandContext): Promise<void> {
     console.log("get all ragers");
     let r1 = "";
-    await req.get("http://localhost:3000/rager/list")
+    await req.get("http://localhost:48330/rager/list")
       .then(function (htmlString: string) {
         r1 = htmlString;
       })
@@ -65,7 +65,7 @@ export class RageCommand implements Command {
 
   async addNewRager(parsedUserCommand: CommandContext, user: string): Promise<void> {
     let r1 = "";
-    await req.post("http://localhost:3000/rager/" + user)
+    await req.post("http://localhost:48330/rager/" + user)
       .then(function (htmlString: string) {
         r1 = htmlString;
       })
@@ -74,7 +74,7 @@ export class RageCommand implements Command {
       });
     r1 = JSON.parse(r1);
     if (r1[0] === undefined) {
-      await req.post("http://localhost:3000/rager/new/" + user)
+      await req.post("http://localhost:48330/rager/new/" + user)
         .then(function (htmlString: string) {
           r1 = htmlString;
         })
@@ -84,12 +84,13 @@ export class RageCommand implements Command {
       await parsedUserCommand.originalMessage.channel.send("Added " + user + " to the darkside... let's see how how many times we can get them to ragequit");
     } else {
       await parsedUserCommand.originalMessage.channel.send("User already exists - updating");
+      this.updateRager(parsedUserCommand, user);
     }
   }
 
   async updateRager(parsedUserCommand: CommandContext, user: string): Promise<void> {
     let r1 = "";
-    await req.post("http://localhost:3000/rager/" + user)
+    await req.post("http://localhost:48330/rager/" + user)
       .then(function (htmlString: string) {
         r1 = htmlString;
       })
@@ -97,7 +98,7 @@ export class RageCommand implements Command {
         console.log(err);
       });
     const r2 = JSON.parse(r1);
-    await req.post("http://localhost:3000/rager/update/" + r2[0].id)
+    await req.post("http://localhost:48330/rager/update/" + r2[0].id)
       .then(function (htmlString: string) {
         r1 = htmlString;
       })
