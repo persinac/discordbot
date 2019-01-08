@@ -1,7 +1,7 @@
 import Discord, { Message, VoiceChannel, VoiceConnection } from "discord.js";
 import { config, BotConfig } from "./config/config";
 import { CommandHandler } from "./command_handler";
-
+import path = require("path");
 
 validateConfig(config);
 
@@ -59,8 +59,9 @@ const leaveChannel = () => {
 };
 
 const playAudio = (connection: VoiceConnection, audioUrl: string) => {
-  console.log(audioUrl);
+  console.log(audioUrl + " " + path.resolve(audioUrl) + " " + path.normalize(audioUrl));
   const dispatcher = connection.playFile(audioUrl, { volume: 1 });
+  console.log(dispatcher.player);
   dispatcher.on("debug", debugg => {
     console.log("DEBUG DISPATCHER");
     console.log(debugg);
