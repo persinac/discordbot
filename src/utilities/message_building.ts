@@ -13,7 +13,7 @@ export class MessageBuilding {
     tempHdr.push("Counter");
     tempTblData.push(tempHdr);
     for (const parseDataKey in parseData) {
-      const date = new Date( parseData[parseDataKey]["last_rage_quit"] );
+      const date = new Date( parseData[parseDataKey]["reported_on"] );
       if (user === "all user") {
         tempTblData.push([ parseData[parseDataKey]["player"], this.formatDate(date), parseData[parseDataKey]["counter"] ]);
       } else {
@@ -22,24 +22,6 @@ export class MessageBuilding {
     }
     const t = table( tempTblData, { align: [ "l", "c", "c" ] });
     return "```" + t + "```";
-  }
-
-  getColumnMaxLength(defaultLength: number, jData: string, field: string, isDateColumn: boolean): number {
-    let newLength = defaultLength;
-    const parseData = JSON.parse(jData);
-
-    console.log("Current field: " + field);
-    for (const parseDataKey in parseData) {
-      let valueToCompare = "";
-      if (isDateColumn) {
-        const date = new Date( parseData[parseDataKey][field] );
-        valueToCompare = this.formatDate(date);
-      } else {
-        valueToCompare = parseData[parseDataKey][field];
-      }
-      newLength = Buffer.from(valueToCompare.toString()).length > newLength ? Buffer.from(valueToCompare.toString()).length : newLength;
-    }
-    return newLength;
   }
 
   formatDate(date: Date): string {
@@ -58,15 +40,5 @@ export class MessageBuilding {
     } else {
       return digit.toString();
     }
-  }
-
-  padSpacesToValues(value: string, numOfSpaces: number): string {
-    console.log("pad spaces");
-    let retValue = value.toString();
-    const numOfPadding = (numOfSpaces + 2) - retValue.length;
-    const prependSpaces = (numOfPadding / 2) | 0;
-    const appendSpaces = numOfPadding - prependSpaces;
-    retValue = " ".repeat(prependSpaces) + retValue + " ".repeat(appendSpaces);
-    return retValue;
   }
 }
