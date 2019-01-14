@@ -29,7 +29,7 @@ export class RageCommand implements Command {
         break;
       }
       case "ragequit": {
-        await this.updateRager(parsedUserCommand, user);
+        await this.addNewRager(parsedUserCommand, user);
         break;
       }
     }
@@ -65,48 +65,15 @@ export class RageCommand implements Command {
 
   async addNewRager(parsedUserCommand: CommandContext, user: string): Promise<void> {
     let r1 = "";
-    await req.post("http://localhost:48330/rager/" + user)
+    console.log(parsedUserCommand.originalMessage.author.username);
+    await req.post("http://localhost:48330/rager/new/" + user + "&" + parsedUserCommand.originalMessage.author.username)
       .then(function (htmlString: string) {
         r1 = htmlString;
       })
       .catch(function (err) {
         console.log(err);
       });
-    r1 = JSON.parse(r1);
-    if (r1[0] === undefined) {
-      await req.post("http://localhost:48330/rager/new/" + user)
-        .then(function (htmlString: string) {
-          r1 = htmlString;
-        })
-        .catch(function (err) {
-          console.log(err);
-        });
-      await parsedUserCommand.originalMessage.channel.send("Added " + user + " to the darkside... let's see how how many times we can get them to ragequit");
-    } else {
-      await parsedUserCommand.originalMessage.channel.send("User already exists - updating");
-      this.updateRager(parsedUserCommand, user);
-    }
-  }
-
-  async updateRager(parsedUserCommand: CommandContext, user: string): Promise<void> {
-    let r1 = "";
-    await req.post("http://localhost:48330/rager/" + user)
-      .then(function (htmlString: string) {
-        r1 = htmlString;
-      })
-      .catch(function (err) {
-        console.log(err);
-      });
-    const r2 = JSON.parse(r1);
-    await req.post("http://localhost:48330/rager/update/" + r2[0].id)
-      .then(function (htmlString: string) {
-        r1 = htmlString;
-      })
-      .catch(function (err) {
-        console.log(err);
-      });
-    await parsedUserCommand.originalMessage.channel.send("Updated " + user + " rage quit counter. Let's keep the rage building!");
-    this.getRageQuitByName(parsedUserCommand, user);
+    await parsedUserCommand.originalMessage.channel.send("Added " + user + " to the darkside... let's see how how many times we can get them to ragequit");
   }
 
   hasPermissionToRun(parsedUserCommand: CommandContext): boolean {

@@ -1,7 +1,7 @@
 import Discord, { Message, VoiceChannel, VoiceConnection } from "discord.js";
 import { config, BotConfig } from "./config/config";
 import { CommandHandler } from "./command_handler";
-
+import path = require("path");
 
 validateConfig(config);
 
@@ -49,7 +49,7 @@ const joinChannel = (channel: VoiceChannel) => {
   channel.join().then(connection => {
     console.log("channel.join");
     botChannel = channel;
-    playAudio(connection, "/Users/alexpersinger/Downloads/how-do-you-do.mp3");
+    playAudio(connection, ".//how-do-you-do.mp3");
   }).catch(err => console.log(err));
 };
 
@@ -59,8 +59,20 @@ const leaveChannel = () => {
 };
 
 const playAudio = (connection: VoiceConnection, audioUrl: string) => {
-  const dispatcher = connection.playFile(audioUrl);
+  console.log(audioUrl + " " + path.resolve(audioUrl) + " " + path.normalize(audioUrl));
+  const dispatcher = connection.playFile(audioUrl, { volume: 1 });
+  console.log(dispatcher.player);
+  dispatcher.on("debug", debugg => {
+    console.log("DEBUG DISPATCHER");
+    console.log(debugg);
+  });
+  dispatcher.on("error", error => {
+    console.log("ERROR");
+    console.log(error);
+  });
   dispatcher.on("end", end => {
+    console.log("END");
+    console.log(end);
     leaveChannel();
   });
 };

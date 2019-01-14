@@ -5,15 +5,17 @@ module.exports = function(app) {
   app.route('/rager/:player')
     .post(rageQuit.getRageQuitterByName);
 
-  app.route('/rager/new/:player')
+  app.route('/rager/new/:player&:reporter')
     .post(rageQuit.createRageQuitter);
 
+  app.route('/rager/list')
+    .get(rageQuit.get_all_rage_quitters);
+
+  /* Routes not used
   app.route('/rager/update/:rageQuitterId')
     .post(rageQuit.updateRageQuitterById);
 
   app.route('/rager/delete/:rageQuitterId')
     .post(rageQuit.deleteRageQuitter);
-
-  app.route('/rager/list')
-    .get(rageQuit.get_all_rage_quitters);
+   */
 };

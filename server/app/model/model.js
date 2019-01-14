@@ -4,8 +4,8 @@ var sql = require('./db.js');
 var RageQuitter = function(rageQuitter){
   console.log(rageQuitter);
   this.player = rageQuitter.player;
-  this.counter = rageQuitter.counter;
-  this.last_rage_quit = new Date();
+  this.reporter = rageQuitter.reporter;
+  this.reported_on = new Date();
 };
 RageQuitter.createRageQuitter = function createRageQuitter(newRageQuitter, result) {
   sql.query("INSERT INTO ragequit set ?", newRageQuitter, function (err, res) {
@@ -21,7 +21,7 @@ RageQuitter.createRageQuitter = function createRageQuitter(newRageQuitter, resul
   });
 };
 RageQuitter.getRageQuitterByName = function getByName(name, result) {
-  sql.query("Select * from ragequit where player = ?", [name], function (err, res) {
+  sql.query("Select * from aggregated_ragequit where player = ?", [name], function (err, res) {
     if(err) {
       console.log("error: ", err);
       result(err, null);
@@ -33,7 +33,7 @@ RageQuitter.getRageQuitterByName = function getByName(name, result) {
   });
 };
 RageQuitter.getAllRageQuitters = function getAllTask(result) {
-  sql.query("Select * from ragequit", function (err, res) {
+  sql.query("Select * from aggregated_ragequit", function (err, res) {
     if(err) {
       console.log("error: ", err);
       result(null, err);

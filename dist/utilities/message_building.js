@@ -1,41 +1,28 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const table = require("text-table");
 class MessageBuilding {
-    // TODO - Justify spacing per column, center the header(s) and data based on justify
     buildMessage(parsedUserCommand, user, data) {
-        let msg = "\nLet's see " + user + "'s rage quit stats:\n";
         const parseData = JSON.parse(data);
-        let tableHdr = "";
-        let tableHdrLine = "";
-        let playerSection = "";
-        let userHdrLength = 0;
-        let lastRageQuitHdrLength = "Last rage quit".length;
-        let countHdrLength = "Count".length;
-        lastRageQuitHdrLength = this.getColumnMaxLength(lastRageQuitHdrLength, data, "last_rage_quit", true);
-        const lastRageQuitHdrText = this.padSpacesToValues("Last Rage Quit", lastRageQuitHdrLength);
+        const tempHdr = [];
+        const tempTblData = [];
         if (user === "all user") {
-            userHdrLength = "User".length;
-            userHdrLength = this.getColumnMaxLength(userHdrLength, data, "player", false);
-            tableHdr += this.padSpacesToValues("Player", userHdrLength) + "|";
+            tempHdr.push("Player");
         }
-        countHdrLength = this.getColumnMaxLength(countHdrLength, data, "counter", false);
-        const counterHdrText = this.padSpacesToValues("Count", countHdrLength);
-        tableHdr += lastRageQuitHdrText + "|" + counterHdrText;
-        tableHdrLine = new Array(tableHdr.length + 1).join("-");
-        msg += tableHdr + "\n" + tableHdrLine + "\n";
+        tempHdr.push("Last Rage Quit");
+        tempHdr.push("Counter");
+        tempTblData.push(tempHdr);
         for (const parseDataKey in parseData) {
             const date = new Date(parseData[parseDataKey]["last_rage_quit"]);
             if (user === "all user") {
-                playerSection += parseData[parseDataKey]["player"];
-                playerSection += " | ";
+                tempTblData.push([parseData[parseDataKey]["player"], this.formatDate(date), parseData[parseDataKey]["counter"]]);
             }
-            playerSection += this.formatDate(date);
-            playerSection += " |   ";
-            playerSection += parseData[parseDataKey]["counter"];
-            playerSection += "\n";
+            else {
+                tempTblData.push([this.formatDate(date), parseData[parseDataKey]["counter"]]);
+            }
         }
-        msg += playerSection;
-        return msg;
+        const t = table(tempTblData, { align: ["l", "c", "c"] });
+        return "```" + t + "```";
     }
     getColumnMaxLength(defaultLength, jData, field, isDateColumn) {
         let newLength = defaultLength;
@@ -50,9 +37,6 @@ class MessageBuilding {
             else {
                 valueToCompare = parseData[parseDataKey][field];
             }
-            console.log("Curr val: " + valueToCompare.toString() + " length: " + valueToCompare.toString().length);
-            console.log("BUFFER Curr val: " + valueToCompare.toString() + " length: " + Buffer.from(valueToCompare.toString()).length);
-            console.log("BUFFER Curr val: " + valueToCompare.toString() + " length: " + this.byteLength(valueToCompare.toString()));
             newLength = Buffer.from(valueToCompare.toString()).length > newLength ? Buffer.from(valueToCompare.toString()).length : newLength;
         }
         return newLength;
@@ -75,22 +59,13 @@ class MessageBuilding {
         }
     }
     padSpacesToValues(value, numOfSpaces) {
-        console.log("pad spaces for " + value);
-        console.log("Current length " + value.toString().length);
-        console.log("default spaces: " + numOfSpaces);
+        console.log("pad spaces");
         let retValue = value.toString();
         const numOfPadding = (numOfSpaces + 2) - retValue.length;
-        console.log(numOfPadding);
         const prependSpaces = (numOfPadding / 2) | 0;
-        console.log(prependSpaces);
         const appendSpaces = numOfPadding - prependSpaces;
-        console.log(appendSpaces);
         retValue = " ".repeat(prependSpaces) + retValue + " ".repeat(appendSpaces);
-        console.log("New length " + retValue.length);
         return retValue;
-    }
-    byteLength(str) {
-        return Buffer.byteLength(str);
     }
 }
 exports.MessageBuilding = MessageBuilding;

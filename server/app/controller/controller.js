@@ -11,7 +11,7 @@ exports.get_all_rage_quitters = function(req, res) {
 
 
 exports.createRageQuitter = function(req, res) {
-  var new_rage_quitter = new RageQuitter({player: req.params.player, counter: 1});
+  var new_rage_quitter = new RageQuitter({player: req.params.player, reporter: req.params.reporter});
   if(!new_rage_quitter || !new_rage_quitter){
     res.status(400).send({ error:true, message: 'Please provide player name' });
   }
@@ -32,7 +32,7 @@ exports.getRageQuitterByName = function(req, res) {
   });
 };
 
-
+/* functions below this are unused as of 01/14/19 */
 exports.updateRageQuitterById = function(req, res) {
   RageQuitter.updateCounterById(req.params.rageQuitterId, function(err, rageQuitter) {
     if (err)
