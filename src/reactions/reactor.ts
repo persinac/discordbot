@@ -1,5 +1,5 @@
 import { Message } from "discord.js";
-import { config } from "../config/config";
+import { env_config } from "../config/env_config";
 
 const ACK_REACTIONS = ["👍", "🎮", "💚", "🍜"];
 const EXPIRED_REACTIONS = ["🖤"];
@@ -40,4 +40,4 @@ export class Reactor {
   }
 }
 
-export let reactor = new Reactor(config.enableReactions);
+export let reactor = new Reactor(env_config.enableReactions);

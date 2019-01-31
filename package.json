@@ -6,7 +6,8 @@
   "author": "Alex Persinger",
   "license": "MIT",
   "scripts": {
-    "start": "npm run build && npm run serve",
+    "start": "export NODE_ENV=production && npm run build && npm run serve",
+    "start-dev": "export NODE_ENV=dev && npm run build && npm run serve",
     "build": "npm run build-ts && npm run tslint",
     "serve": "node dist/server.js",
     "watch-node": "nodemon dist/server.js",
@@ -21,11 +22,13 @@
     "watch-debug": "concurrently -k -p \"[{name}]\" -n \"Sass,TypeScript,Node\" -c \"yellow.bold,cyan.bold,green.bold\" \"npm run watch-sass\" \"npm run watch-ts\" \"npm run serve-debug\""
   },
   "dependencies": {
+    "@types/config": "0.0.34",
     "@types/request": "^2.48.1",
     "@types/request-promise-native": "^1.0.15",
     "@types/text-encoding": "0.0.35",
     "@types/text-table": "^0.2.0",
     "body-parser": "^1.18.3",
+    "config": "^3.0.1",
     "discord.js": "^11.3.2",
     "ejs": "^2.6.1",
     "express": "^4.16.4",

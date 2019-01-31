@@ -1,11 +1,11 @@
 import Discord, { Message, VoiceChannel, VoiceConnection } from "discord.js";
-import { config, BotConfig } from "./config/config";
+import { env_config, BotConfig } from "./config/env_config";
 import { CommandHandler } from "./command_handler";
 import path = require("path");
 
-validateConfig(config);
+validateConfig(env_config);
 
-const commandHandler = new CommandHandler(config.prefix);
+const commandHandler = new CommandHandler(env_config.prefix);
 const client = new Discord.Client();
 let botChannel: VoiceChannel = undefined;
 
@@ -35,9 +35,9 @@ client.on("voiceStateUpdate", (oldMember, newMember) => {
   }
 });
 
-client.login(config.token);
+client.login(env_config.token);
 
-/** Pre-startup validation of the bot config. */
+/** Pre-startup validation of the bot env_config. */
 function validateConfig(config: BotConfig) {
   if (!config.token) {
     throw new Error("You need to specify your Discord bot token!");

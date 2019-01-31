@@ -9,7 +9,7 @@ export class GreetCommand implements Command {
   }
 
   async runCommand(parsedUserCommand: CommandContext): Promise<void> {
-    await parsedUserCommand.originalMessage.reply("hello, world!");
+    await parsedUserCommand.originalMessage.reply("Who's raging tonight?");
   }
 
   hasPermissionToRun(parsedUserCommand: CommandContext): boolean {
