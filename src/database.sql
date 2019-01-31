@@ -1,3 +1,4 @@
+CREATE DATABASE `discord`;
 use discord;
 CREATE TABLE `ragequit` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
