@@ -1,3 +1,4 @@
+use discord;
 CREATE TABLE `ragequit` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `player` varchar(255) NOT NULL,

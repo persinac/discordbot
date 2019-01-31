@@ -1,3 +1,4 @@
+use discord;
 truncate ragequit;
 alter table ragequit drop column counter;
 alter table ragequit drop column last_rage_quit;
