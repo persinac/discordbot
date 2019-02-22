@@ -8,7 +8,6 @@ var GamelistModel = function(gameList){
 };
 GamelistModel.createGame = function createGame(newGame, result) {
   sql.query("INSERT INTO game_list set ?", newGame, function (err, res) {
-
     if(err) {
       console.log("error: ", err);
       result(err, null);
@@ -37,7 +36,7 @@ GamelistModel.getAllGames = function getAllGames(result) {
       result(null, err);
     }
     else{
-      console.log('rage quitters : ', res);
+      console.log('games : ', res);
       result(null, res);
     }
   });

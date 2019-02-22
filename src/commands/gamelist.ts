@@ -15,22 +15,36 @@ export class GameListCommand implements Command {
   async runCommand(parsedUserCommand: CommandContext, game: string): Promise<void> {
     const originalMessage = parsedUserCommand.originalMessage.toString();
     const cmd = originalMessage.split(" ", 1)[0].substring(1);
-    const game_short = "";
     switch (cmd) {
       case "games": {
         await this.getAllGames(parsedUserCommand);
         break;
       }
       case "gameget": {
-        await this.getGameByAbbreviation(parsedUserCommand, game);
+        const game_short = originalMessage.split(" ")[1];
+        await this.getGameByAbbreviation(parsedUserCommand, game_short);
         break;
       }
       case "gameadd": {
-        await this.addNewGame(parsedUserCommand, game, game_short);
+        // handle arguments -l -a (long / short)
+        // TODO add parser to utilities class
+        if (originalMessage.indexOf("-l ") > 0 && originalMessage.indexOf("-a ") > 0) {
+          const game_long = originalMessage.substring(originalMessage.indexOf("-l") + 2, originalMessage.indexOf("-a") - 1).trim();
+          const game_short = originalMessage.substring(originalMessage.indexOf("-a") + 2).trim();
+          if (game_short.length > 4) {
+            await parsedUserCommand.originalMessage.channel.send("Abbreviations must be less than or equal to 4 characters in length");
+          } else {
+            await this.addNewGame(parsedUserCommand, game_long, game_short);
+          }
+        } else {
+          await parsedUserCommand.originalMessage.channel.send("Did not find -l (long name) or -a (abbreviation), please use these arguments to add a game. Remember to add a space between arguments and values.");
+        }
         break;
       }
       case "gamerem": {
-        await this.removeGame(parsedUserCommand, game);
+        const game_short = originalMessage.split(" ")[1];
+        console.log(cmd + " | " + game_short + " | " + originalMessage);
+        await this.removeGame(parsedUserCommand, game_short);
         break;
       }
     }
@@ -38,7 +52,6 @@ export class GameListCommand implements Command {
 
   async getGameByAbbreviation(parsedUserCommand: CommandContext, game: string): Promise<void> {
     let r1 = "";
-    console.log(game);
     await req.post("http://localhost:48330/gamelist/" + game)
       .then(function (htmlString: string) {
         r1 = htmlString;
@@ -46,7 +59,7 @@ export class GameListCommand implements Command {
       .catch(function (err) {
         console.log(err);
       });
-    const msg = this.msgBldr.buildMessage(parsedUserCommand, game, r1);
+    const msg = this.msgBldr.buildGamelistMessage(parsedUserCommand, r1);
     await parsedUserCommand.originalMessage.channel.send(msg);
   }
 
@@ -59,13 +72,12 @@ export class GameListCommand implements Command {
       .catch(function (err) {
         console.log(err);
       });
-    const msg = this.msgBldr.buildMessage(parsedUserCommand, "allgames", r1);
+    const msg = this.msgBldr.buildGamelistMessage(parsedUserCommand, r1);
     await parsedUserCommand.originalMessage.channel.send(msg);
   }
 
   async addNewGame(parsedUserCommand: CommandContext, game: string, game_short: string): Promise<void> {
     let r1 = "";
-    console.log(parsedUserCommand.originalMessage.author.username);
     await req.post("http://localhost:48330/gamelist/new/" + game + "&" + game_short)
       .then(function (htmlString: string) {
         r1 = htmlString;

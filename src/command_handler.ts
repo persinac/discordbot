@@ -1,6 +1,6 @@
 import { GuildMember, Message } from "discord.js";
 import { Command } from "./commands/command";
-import {GameListCommand} from './commands/gamelist';
+import { GameListCommand } from "./commands/gamelist";
 import { RageCommand } from "./commands/rage";
 import { CommandContext } from "./models/command_context";
 import { HelpCommand } from "./commands/help";
