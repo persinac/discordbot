@@ -1,4 +1,4 @@
-var RageQuitter = require('../model/RageQuitter.js');
+var RageQuitter = require('../model/RageQuitterModel.js');
 
 exports.get_all_rage_quitters = function(req, res) {
   RageQuitter.getAllRageQuitters(function(err, rageQuitter) {

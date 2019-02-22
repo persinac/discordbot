@@ -1,5 +1,6 @@
 import { GuildMember, Message } from "discord.js";
 import { Command } from "./commands/command";
+import {GameListCommand} from './commands/gamelist';
 import { RageCommand } from "./commands/rage";
 import { CommandContext } from "./models/command_context";
 import { HelpCommand } from "./commands/help";
@@ -16,7 +17,8 @@ export class CommandHandler {
     const commandClasses = [
       // TODO: Add more commands here.
       GreetCommand,
-      RageCommand
+      RageCommand,
+      GameListCommand
     ];
 
     this.commands = commandClasses.map(commandClass => new commandClass());
