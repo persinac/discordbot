@@ -1,1 +1,1 @@
-mysql -u username -p database_name < <file>.sql
+mysql -h <?.?.?.?> -P <????> -u username < <file>.sql
