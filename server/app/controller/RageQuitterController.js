@@ -8,8 +8,6 @@ exports.get_all_rage_quitters = function(req, res) {
   });
 };
 
-
-
 exports.createRageQuitter = function(req, res) {
   var new_rage_quitter = new RageQuitter({player: req.params.player, reporter: req.params.reporter});
   if(!new_rage_quitter || !new_rage_quitter){
