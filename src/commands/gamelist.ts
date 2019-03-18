@@ -1,5 +1,6 @@
 import { Message } from "discord.js";
 import { MessageBuilding } from "../utilities/message_building";
+import { ParseMessageArguments } from "../utilities/parse_message_arguments";
 import { Command } from "./command";
 import { CommandContext } from "../models/command_context";
 import * as req from "request-promise-native";
@@ -7,6 +8,7 @@ import * as req from "request-promise-native";
 export class GameListCommand implements Command {
   commandNames = ["games", "gameget", "gameadd", "gamerem"];
   msgBldr = new MessageBuilding();
+  parseMsgArgs = new ParseMessageArguments();
 
   getHelpMessage(commandPrefix: string): string {
     return `Use ${commandPrefix}${this.commandNames.join(", ")} to do game stuff.`;
@@ -29,8 +31,9 @@ export class GameListCommand implements Command {
         // handle arguments -l -a (long / short)
         // TODO add parser to utilities class
         if (originalMessage.indexOf("-l ") > 0 && originalMessage.indexOf("-a ") > 0) {
-          const game_long = originalMessage.substring(originalMessage.indexOf("-l") + 2, originalMessage.indexOf("-a") - 1).trim();
-          const game_short = originalMessage.substring(originalMessage.indexOf("-a") + 2).trim();
+          const parsedArgs = this.parseMsgArgs.parseArgumentsForGameAdd(originalMessage, "-l", "-a");
+          const game_long = parsedArgs[0];
+          const game_short = parsedArgs[1];
           if (game_short.length > 4) {
             await parsedUserCommand.originalMessage.channel.send("Abbreviations must be less than or equal to 4 characters in length");
           } else {
