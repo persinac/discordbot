@@ -1,4 +1,4 @@
-var RageQuitter = require('../model/RageQuitter.js');
+var RageQuitter = require('../model/RageQuitterModel.js');
 
 exports.get_all_rage_quitters = function(req, res) {
   RageQuitter.getAllRageQuitters(function(err, rageQuitter) {
@@ -7,8 +7,6 @@ exports.get_all_rage_quitters = function(req, res) {
     res.send(rageQuitter);
   });
 };
-
-
 
 exports.createRageQuitter = function(req, res) {
   var new_rage_quitter = new RageQuitter({player: req.params.player, reporter: req.params.reporter});

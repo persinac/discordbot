@@ -24,6 +24,20 @@ export class MessageBuilding {
     return "```" + t + "```";
   }
 
+  public buildGamelistMessage(parsedUserCommand: CommandContext, data: string): string {
+    const parseData = JSON.parse(data);
+    const tempHdr: string[] = [];
+    const tempTblData = [];
+    tempHdr.push("Game");
+    tempHdr.push("Abbreviation");
+    tempTblData.push(tempHdr);
+    for (const parseDataKey in parseData) {
+      tempTblData.push([ parseData[parseDataKey]["game_name"], parseData[parseDataKey]["abbreviation"] ]);
+    }
+    const t = table( tempTblData, { align: [ "l", "c" ] });
+    return "```" + t + "```";
+  }
+
   formatDate(date: Date): string {
     const day = date.getDate();
     const monthIndex = date.getMonth();
