@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const config_1 = require("../config/config");
+const env_config_1 = require("../config/env_config");
 const ACK_REACTIONS = ["👍", "🎮", "💚", "🍜"];
 const EXPIRED_REACTIONS = ["🖤"];
 const FAILURE_REACTIONS = ["⛔", "🚱"];
@@ -18,14 +18,14 @@ class Reactor {
     async failure(message) {
         if (!this.enableReactions)
             return;
-        await message.clearReactions();
+        await message.reactions.removeAll().catch(error => console.error("Failed to clear reactions: ", error));
         return message.react(this.getRandom(FAILURE_REACTIONS));
     }
     /** Indicates to the user that the command is no longer active, as intended. */
     async expired(message) {
         if (!this.enableReactions)
             return;
-        await message.clearReactions();
+        await message.reactions.removeAll().catch(error => console.error("Failed to clear reactions: ", error));
         return message.react(this.getRandom(EXPIRED_REACTIONS));
     }
     /** Gets a random element of an array. */
@@ -34,5 +34,5 @@ class Reactor {
     }
 }
 exports.Reactor = Reactor;
-exports.reactor = new Reactor(config_1.config.enableReactions);
+exports.reactor = new Reactor(env_config_1.env_config.enableReactions);
 //# sourceMappingURL=reactor.js.map

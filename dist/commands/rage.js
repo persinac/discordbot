@@ -34,7 +34,7 @@ class RageCommand {
                 break;
             }
             case "ragequit": {
-                await this.updateRager(parsedUserCommand, user);
+                await this.addNewRager(parsedUserCommand, user);
                 break;
             }
         }
@@ -49,7 +49,7 @@ class RageCommand {
             .catch(function (err) {
             console.log(err);
         });
-        const msg = this.msgBldr.buildMessage(parsedUserCommand, user, r1);
+        const msg = this.msgBldr.buildMessage(parsedUserCommand, "rage", user, r1);
         await parsedUserCommand.originalMessage.channel.send(msg);
     }
     async getAllRagers(parsedUserCommand) {
@@ -62,53 +62,20 @@ class RageCommand {
             .catch(function (err) {
             console.log(err);
         });
-        const msg = this.msgBldr.buildMessage(parsedUserCommand, "all user", r1);
+        const msg = this.msgBldr.buildMessage(parsedUserCommand, "rage", "all user", r1);
         await parsedUserCommand.originalMessage.channel.send(msg);
     }
     async addNewRager(parsedUserCommand, user) {
         let r1 = "";
-        await req.post("http://localhost:48330/rager/" + user)
+        console.log(parsedUserCommand.originalMessage.author.username);
+        await req.post("http://localhost:48330/rager/new/" + user + "&" + parsedUserCommand.originalMessage.author.username)
             .then(function (htmlString) {
             r1 = htmlString;
         })
             .catch(function (err) {
             console.log(err);
         });
-        r1 = JSON.parse(r1);
-        if (r1[0] === undefined) {
-            await req.post("http://localhost:48330/rager/new/" + user)
-                .then(function (htmlString) {
-                r1 = htmlString;
-            })
-                .catch(function (err) {
-                console.log(err);
-            });
-            await parsedUserCommand.originalMessage.channel.send("Added " + user + " to the darkside... let's see how how many times we can get them to ragequit");
-        }
-        else {
-            await parsedUserCommand.originalMessage.channel.send("User already exists - updating");
-            this.updateRager(parsedUserCommand, user);
-        }
-    }
-    async updateRager(parsedUserCommand, user) {
-        let r1 = "";
-        await req.post("http://localhost:48330/rager/" + user)
-            .then(function (htmlString) {
-            r1 = htmlString;
-        })
-            .catch(function (err) {
-            console.log(err);
-        });
-        const r2 = JSON.parse(r1);
-        await req.post("http://localhost:48330/rager/update/" + r2[0].id)
-            .then(function (htmlString) {
-            r1 = htmlString;
-        })
-            .catch(function (err) {
-            console.log(err);
-        });
-        await parsedUserCommand.originalMessage.channel.send("Updated " + user + " rage quit counter. Let's keep the rage building!");
-        this.getRageQuitByName(parsedUserCommand, user);
+        await parsedUserCommand.originalMessage.channel.send("Added " + user + " to the darkside... let's see how how many times we can get them to ragequit");
     }
     hasPermissionToRun(parsedUserCommand) {
         return true;

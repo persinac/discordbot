@@ -22,7 +22,7 @@ export class Reactor {
   async failure(message: Message) {
     if (!this.enableReactions) return;
 
-    await message.clearReactions();
+    await message.reactions.removeAll().catch(error => console.error("Failed to clear reactions: ", error));
     return message.react(this.getRandom(FAILURE_REACTIONS));
   }
 
@@ -30,7 +30,7 @@ export class Reactor {
   async expired(message: Message) {
     if (!this.enableReactions) return;
 
-    await message.clearReactions();
+    await message.reactions.removeAll().catch(error => console.error("Failed to clear reactions: ", error));
     return message.react(this.getRandom(EXPIRED_REACTIONS));
   }
 

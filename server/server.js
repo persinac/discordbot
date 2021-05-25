@@ -4,17 +4,17 @@ const express = require('express'),
 port = process.env.PORT || 48330;
 
 
-const mysql = require('mysql');
-// connection configurations
-const mc = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: '',
-  database: 'discord'
-});
+// const mysql = require('mysql');
+// // connection configurations
+// const mc = mysql.createConnection({
+//   host: 'localhost',
+//   user: 'discord',
+//   password: 'discord',
+//   database: 'discord'
+// });
 
 // connect to database
-mc.connect();
+// mc.connect();
 
 app.listen(port);
 

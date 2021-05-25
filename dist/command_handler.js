@@ -1,17 +1,27 @@
 "use strict";
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const rage_1 = require("./commands/rage");
 const command_context_1 = require("./models/command_context");
 const help_1 = require("./commands/help");
 const reactor_1 = require("./reactions/reactor");
 const greet_1 = require("./commands/greet");
+const salt_1 = require("./commands/salt");
+const fs = __importStar(require("fs"));
 /** Handler for bot commands issued by users. */
 class CommandHandler {
     constructor(prefix) {
         const commandClasses = [
             // TODO: Add more commands here.
             greet_1.GreetCommand,
-            rage_1.RageCommand
+            rage_1.RageCommand,
+            salt_1.SaltCommand
         ];
         this.commands = commandClasses.map(commandClass => new commandClass());
         this.commands.push(new help_1.HelpCommand(this.commands));
@@ -45,9 +55,84 @@ class CommandHandler {
             });
         }
     }
+    /*** Executes BOT generated commands contained in a message if appropriate. **/
+    async handleBotMessage(client, command) {
+        const chan = [];
+        const guildConfigs = [];
+        await client.guilds.cache.each((g) => {
+            // for each client get the guild ID
+            // then retrieve configuration file by <guild_id>.json
+            console.log(g.id);
+            // if role is empty, get everyone in the server
+            // else get everyone in the config'd roles array
+            const rawDog = fs.readFileSync(`guild_configs\\${g.id}.json`, "utf8");
+            const config = JSON.parse(rawDog);
+            const gc = {
+                guildId: g.id,
+                mainChannel: config["main_channel"],
+                roles: config["roles"],
+                members: []
+            };
+            if (gc.roles.length > 0) {
+                const serverRole = g.roles.cache.filter((r) => {
+                    return gc.roles.indexOf(r.name) >= 0;
+                });
+                serverRole.each((r) => {
+                    r.members.each((m) => {
+                        if (m.user.username !== undefined) {
+                            gc.members.push(m.user.username);
+                        }
+                    });
+                });
+            }
+            guildConfigs.push(gc);
+        });
+        await client.channels.cache.each((c) => {
+            client.channels.fetch(c.id)
+                .then(channel => {
+                if (channel.type === "text") {
+                    const ts = channel;
+                    let gc;
+                    gc = guildConfigs.filter((g) => ts.guild.id === g.guildId);
+                    if (ts.name === gc[0].mainChannel) {
+                        chan.push(ts);
+                    }
+                }
+            });
+        });
+        /* TODO: enum for bot commands */
+        if (command === "giveAllSalt") {
+            chan.forEach((c) => {
+                CommandHandler.setUpRandomSalt(c);
+            });
+        }
+    }
     /** Determines whether or not a message is a user command. */
     isCommand(message) {
         return message.content.startsWith(this.prefix);
+    }
+    static getRandomInt(max) {
+        return Math.floor(Math.random() * Math.floor(max));
+    }
+    static setUpRandomSalt(textChannel) {
+        const intervalMS = this.getRandomInt(50000000);
+        console.log(`Setting Interval: ${intervalMS}`);
+        const promise = new Promise(function (resolve, reject) {
+            setTimeout(() => {
+                CommandHandler.randomSalt(textChannel);
+                CommandHandler.setUpRandomSalt(textChannel);
+            }, intervalMS);
+        });
+    }
+    /***
+     * This is working - just need to:
+     * 2. Maybe figure out a trigger to the DB to switch this on/off for more randomness and less frequency
+     ***/
+    static async randomSalt(textChannel) {
+        textChannel.send("@everyone", { files: ["images\\salt_for_all.jpg"] });
+        const saltGranules = this.getRandomInt(500);
+        await salt_1.SaltCommand.botAddSalt(textChannel, saltGranules);
+        await salt_1.SaltCommand.botGetAllSalt(textChannel);
     }
 }
 exports.CommandHandler = CommandHandler;

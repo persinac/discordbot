@@ -3,7 +3,8 @@
  *
  * Revisions to this file should not be committed to the repository.
  */
-import config from "config";
+// process.env.NODE_CONFIG_DIR = "../src/config";
+const config = require("config");
 
 export type BotConfig = {
   /** the Discord bot token. */

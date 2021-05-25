@@ -8,7 +8,7 @@ class GreetCommand {
         return `Use ${commandPrefix}greet to get a greeting.`;
     }
     async runCommand(parsedUserCommand) {
-        await parsedUserCommand.originalMessage.reply("hello, world!");
+        await parsedUserCommand.originalMessage.reply("Who's raging tonight?");
     }
     hasPermissionToRun(parsedUserCommand) {
         return true;

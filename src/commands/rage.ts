@@ -45,7 +45,7 @@ export class RageCommand implements Command {
       .catch(function (err) {
         console.log(err);
       });
-    const msg = this.msgBldr.buildMessage(parsedUserCommand, user, r1);
+    const msg = this.msgBldr.buildMessage(parsedUserCommand, "rage", user, r1);
     await parsedUserCommand.originalMessage.channel.send(msg);
   }
 
@@ -59,7 +59,7 @@ export class RageCommand implements Command {
       .catch(function (err) {
         console.log(err);
       });
-    const msg = this.msgBldr.buildMessage(parsedUserCommand, "all user", r1);
+    const msg = this.msgBldr.buildMessage(parsedUserCommand, "rage", "all user", r1);
     await parsedUserCommand.originalMessage.channel.send(msg);
   }
 
