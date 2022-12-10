@@ -35,7 +35,7 @@
     "config": "^3.3.1",
     "discord.js": "github:discordjs/discord.js",
     "discordjs-logger": "^1.9.42",
-    "express": "^4.16.4",
+    "express": "^4.17.3",
     "ffmpeg": "0.0.4",
     "ffmpeg-static": "^4.0.1",
     "mysql": "^2.16.0",
